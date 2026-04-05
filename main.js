@@ -73,7 +73,6 @@ async function share(proverb) {
     try {
       await navigator.share({
         text: `🐣 Ég fékk málsháttinn: \n„${proverb}"\n\n<malshattur.is>`,
-        url: SITE_URL,
       });
     } catch (e) {
       if (e.name !== 'AbortError') console.error(e);
