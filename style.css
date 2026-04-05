@@ -41,8 +41,9 @@ main {
 .proverb-area {
   min-height: 6rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 1.25rem;
 }
 
 .proverb-text {
@@ -58,12 +59,6 @@ main {
 .proverb-text.visible {
   opacity: 1;
   transform: translateY(0);
-}
-
-.btn-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
 }
 
 .btn {
@@ -97,16 +92,25 @@ main {
 .share-btn {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 3px;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 99px;
   border: 1.5px solid #d0cfc9;
   background: transparent;
   color: var(--text-muted);
+  font-family: system-ui, sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
-  flex-shrink: 0;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.share-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .share-btn:hover {

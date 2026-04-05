@@ -61,15 +61,20 @@ function showProverb(text) {
   const shareBtn = document.getElementById('share-btn');
   shareBtn.hidden = false;
   shareBtn.dataset.proverb = text;
+  // Trigger fade-in (hidden removal lets display kick in first)
+  requestAnimationFrame(() => shareBtn.classList.add('visible'));
 }
 
 async function share(proverb) {
-  const text = `🐣 Ég fékk málsháttinn: „${proverb}" — ${SITE_URL}`;
   const shareBtn = document.getElementById('share-btn');
+  const label = document.getElementById('share-label');
 
   if (navigator.share) {
     try {
-      await navigator.share({ text });
+      await navigator.share({
+        text: `🐣 Ég fékk málsháttinn: „${proverb}"`,
+        url: SITE_URL,
+      });
     } catch (e) {
       if (e.name !== 'AbortError') console.error(e);
     }
@@ -77,13 +82,17 @@ async function share(proverb) {
   }
 
   // Clipboard fallback
-  await navigator.clipboard.writeText(text);
-  shareBtn.classList.add('copied');
-  setStatus('Afritað!');
-  setTimeout(() => {
-    shareBtn.classList.remove('copied');
-    setStatus('');
-  }, 2000);
+  try {
+    await navigator.clipboard.writeText(`🐣 Ég fékk málsháttinn: „${proverb}" — ${SITE_URL}`);
+    shareBtn.classList.add('copied');
+    label.textContent = 'Afritað!';
+    setTimeout(() => {
+      shareBtn.classList.remove('copied');
+      label.textContent = 'Deila';
+    }, 2000);
+  } catch (e) {
+    console.error('Clipboard failed:', e);
+  }
 }
 
 function setStatus(msg) {
