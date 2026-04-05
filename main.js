@@ -1,3 +1,5 @@
+const SITE_URL = 'https://malshattur.is';
+
 const WIKI_API =
   'https://is.wikipedia.org/w/api.php?' +
   new URLSearchParams({
@@ -55,6 +57,33 @@ function showProverb(text) {
     void el.offsetWidth;
     el.classList.add('visible');
   }, text === '' ? 0 : 200);
+
+  const shareBtn = document.getElementById('share-btn');
+  shareBtn.hidden = false;
+  shareBtn.dataset.proverb = text;
+}
+
+async function share(proverb) {
+  const text = `🐣 Ég fékk málsháttinn: „${proverb}" — ${SITE_URL}`;
+  const shareBtn = document.getElementById('share-btn');
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ text });
+    } catch (e) {
+      if (e.name !== 'AbortError') console.error(e);
+    }
+    return;
+  }
+
+  // Clipboard fallback
+  await navigator.clipboard.writeText(text);
+  shareBtn.classList.add('copied');
+  setStatus('Afritað!');
+  setTimeout(() => {
+    shareBtn.classList.remove('copied');
+    setStatus('');
+  }, 2000);
 }
 
 function setStatus(msg) {
@@ -85,6 +114,11 @@ async function init() {
     const idx = pickRandom(proverbs);
     lastIndex = idx;
     showProverb(proverbs[idx]);
+  });
+
+  document.getElementById('share-btn').addEventListener('click', (e) => {
+    const proverb = e.currentTarget.dataset.proverb;
+    if (proverb) share(proverb);
   });
 }
 
