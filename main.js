@@ -72,7 +72,7 @@ async function share(proverb) {
   if (navigator.share) {
     try {
       await navigator.share({
-        text: `🐣 Ég fékk málsháttinn: \n„${proverb}"\n\n<malshattur.is>`,
+        text: `🐣 Ég fékk málsháttinn: \n„${proverb}"\n\nmalshattur.is`,
       });
     } catch (e) {
       if (e.name !== 'AbortError') console.error(e);
@@ -82,7 +82,7 @@ async function share(proverb) {
 
   // Clipboard fallback
   try {
-    await navigator.clipboard.writeText(`🐣 Ég fékk málsháttinn: \n„${proverb}"\n\n<malshattur.is>`);
+    await navigator.clipboard.writeText(`🐣 Ég fékk málsháttinn: \n„${proverb}"\n\nmalshattur.is`);
     shareBtn.classList.add('copied');
     label.textContent = 'Afritað!';
     setTimeout(() => {
