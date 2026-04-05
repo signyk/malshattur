@@ -68,7 +68,7 @@ function setButtonDisabled(disabled) {
 async function init() {
   const btn = document.getElementById('btn');
   setButtonDisabled(true);
-  setStatus('Hleður málshöttum…');
+  setStatus('Hleður málsháttum…');
 
   try {
     proverbs = await loadProverbs();
