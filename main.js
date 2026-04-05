@@ -23,11 +23,13 @@ async function loadProverbs() {
 
   const doc = new DOMParser().parseFromString(html, 'text/html');
 
-  // The page is structured as <ul><li>proverb</li>...</ul> sections.
-  // Grab all <li> text nodes, strip footnote markers and trim.
-  const items = [...doc.querySelectorAll('li')]
+  // Remove Wikipedia chrome that also contains <li> elements
+  doc.querySelectorAll('#toc, .navbox, .mw-references-wrap, .reflist, #catlinks, .mw-editsection, .sistersitebox, [role="navigation"]')
+    .forEach((el) => el.remove());
+
+  // Proverbs are in <ul><li> within the main content column
+  const items = [...doc.querySelectorAll('.mw-parser-output li')]
     .map((li) => {
-      // Remove any <sup> (footnote) nodes before reading text
       li.querySelectorAll('sup, .reference').forEach((el) => el.remove());
       return li.textContent.trim();
     })
