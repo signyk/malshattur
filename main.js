@@ -4,7 +4,7 @@ let proverbs = [];
 let lastIndex = -1;
 
 async function loadProverbs() {
-  const res = await fetch('data/malshattur.json');
+  const res = await fetch('proverbs.json');
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
   if (!Array.isArray(json.proverbs) || json.proverbs.length === 0)
