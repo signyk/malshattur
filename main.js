@@ -1,42 +1,15 @@
 const SITE_URL = 'https://malshattur.is';
 
-const WIKI_API =
-  'https://is.wikipedia.org/w/api.php?' +
-  new URLSearchParams({
-    action: 'parse',
-    page: 'Listi yfir íslenska málshætti',
-    prop: 'text',
-    format: 'json',
-    origin: '*',
-  });
-
 let proverbs = [];
 let lastIndex = -1;
 
 async function loadProverbs() {
-  const res = await fetch(WIKI_API);
+  const res = await fetch('data/malshattur.json');
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
-
-  const html = json?.parse?.text?.['*'];
-  if (!html) throw new Error('Unexpected API response shape');
-
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-
-  // Remove Wikipedia chrome that also contains <li> elements
-  doc.querySelectorAll('#toc, .navbox, .mw-references-wrap, .reflist, #catlinks, .mw-editsection, .sistersitebox, [role="navigation"]')
-    .forEach((el) => el.remove());
-
-  // Proverbs are in <ul><li> within the main content column
-  const items = [...doc.querySelectorAll('.mw-parser-output li')]
-    .map((li) => {
-      li.querySelectorAll('sup, .reference').forEach((el) => el.remove());
-      return li.textContent.trim();
-    })
-    .filter((t) => t.length > 4 && !t.startsWith('↑'));
-
-  if (items.length === 0) throw new Error('No proverbs found in parsed HTML');
-  return items;
+  if (!Array.isArray(json.proverbs) || json.proverbs.length === 0)
+    throw new Error('No proverbs found in data file');
+  return json.proverbs;
 }
 
 function pickRandom(list) {
