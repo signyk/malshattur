@@ -6,7 +6,7 @@ A minimal website that gives you a random Icelandic proverb (*málsháttur*) at 
 
 ## What it does
 
-- Fetches the full list of proverbs from the [Icelandic Wikipedia](https://is.wikipedia.org/wiki/Listi_yfir_%C3%ADslenska_m%C3%A1lsh%C3%A6tti) on page load
+- Serves proverbs from a local data file sourced from [ms.is](https://www.ms.is/malshaettir-og-ordtok)
 - Displays a random proverb each time you click "Fá málshátt"
 - Lets you share the proverb via the native share sheet (mobile) or clipboard (desktop)
 
