@@ -12,7 +12,7 @@ A minimal website that gives you a random Icelandic proverb (*málsháttur*) at 
 
 ## Stack
 
-Plain HTML, CSS, and JavaScript — no framework, no build step. Hosted on Cloudflare Workers.
+Plain HTML, CSS, and JavaScript — no framework, no build step. Hosted on Cloudflare Pages with automatic deploys on push to `main`.
 
 ## Development
 
