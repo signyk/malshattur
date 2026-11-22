@@ -31,7 +31,7 @@ function showProverb(text) {
     // Force reflow so transition fires
     void el.offsetWidth;
     el.classList.add('visible');
-  }, text === '' ? 0 : 200);
+  }, 200);
 
   const shareBtn = document.getElementById('share-btn');
   shareBtn.hidden = false;
@@ -43,12 +43,11 @@ function showProverb(text) {
 async function share(proverb) {
   const shareBtn = document.getElementById('share-btn');
   const label = document.getElementById('share-label');
+  const text = `🐣 Ég fékk málsháttinn: \n„${proverb}“\n\nmalshattur.is`;
 
   if (navigator.share) {
     try {
-      await navigator.share({
-        text: `🐣 Ég fékk málsháttinn: \n„${proverb}"\n\nmalshattur.is`,
-      });
+      await navigator.share({ text });
     } catch (e) {
       if (e.name !== 'AbortError') console.error(e);
     }
@@ -57,7 +56,7 @@ async function share(proverb) {
 
   // Clipboard fallback
   try {
-    await navigator.clipboard.writeText(`🐣 Ég fékk málsháttinn: \n„${proverb}"\n\nmalshattur.is`);
+    await navigator.clipboard.writeText(text);
     shareBtn.classList.add('copied');
     label.textContent = 'Afritað!';
     setTimeout(() => {
@@ -77,23 +76,29 @@ function setButtonDisabled(disabled) {
   document.getElementById('btn').disabled = disabled;
 }
 
-async function init() {
-  const btn = document.getElementById('btn');
+async function tryLoad() {
   setButtonDisabled(true);
   setStatus('Hleður málsháttum…');
 
   try {
     proverbs = await loadProverbs();
     setStatus('');
-    setButtonDisabled(false);
   } catch (err) {
     console.error(err);
     setStatus('Gat ekki sótt málshætti. Reyndu aftur.');
-    setButtonDisabled(false);
   }
+  setButtonDisabled(false);
+}
 
-  btn.addEventListener('click', () => {
-    if (proverbs.length === 0) return;
+async function init() {
+  const btn = document.getElementById('btn');
+
+  btn.addEventListener('click', async () => {
+    // A failed initial load leaves the list empty; clicking retries it
+    if (proverbs.length === 0) {
+      await tryLoad();
+      if (proverbs.length === 0) return;
+    }
     const idx = pickRandom(proverbs);
     lastIndex = idx;
     showProverb(proverbs[idx]);
@@ -103,6 +108,8 @@ async function init() {
     const proverb = e.currentTarget.dataset.proverb;
     if (proverb) share(proverb);
   });
+
+  await tryLoad();
 }
 
 init();
